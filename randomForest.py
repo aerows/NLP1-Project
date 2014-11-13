@@ -1,7 +1,5 @@
 import numpy as np
 def hasMultipleTargetClasses(data):
-    """Computes if the dataset is unpure"""
-    
     # Count the amount of unique target classes that are left in this node/leaf
     # If more than one, the node is still unpure (and would require another split if possible)
     return len(np.unique(data[:,-1])) > 1
@@ -52,14 +50,14 @@ def decisionStump(data):
     entropy = np.inf;
     #for all attrbutes:
     K = data.shape[1];
-    for k_temp in range(K):
+    for k_temp in range(K-1):
         #sort on values of that attribute
-        sort = data[data[:,2].argsort()]
+        sort = data[data[:,k_temp].argsort()]
         #for all values
         for value_temp in np.unique(sort[:,2]):
             #calculate entropy of this split (add upper and lower)
             lower = data[data[:,k_temp]<=value_temp]
-            upper = data[data[:,k_temp]>=value_temp]
+            upper = data[data[:,k_temp]>value_temp]
             entropylower = calculateEntropy(lower);
             entropyupper = calculateEntropy(upper);
             #if entropy is smaller 
@@ -81,7 +79,7 @@ def calculateEntropy(data):
     if len(np.unique(data[:,-1])) <= 1:
         H = 0;
     else:
-        histogram = np.histogram(data[:,-1],len(np.unique(data[:,-1])));
+        histogram,_ = np.histogram(data[:,-1],len(np.unique(data[:,-1])));
         H = 0;
         prob = np.double(histogram)/sum(np.double(histogram));
         for p in prob:
