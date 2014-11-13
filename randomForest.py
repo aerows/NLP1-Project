@@ -52,19 +52,21 @@ def decisionStump(data):
         #sort on values of that attribute
         sort = data[data[:,2].argsort()]
         #for all values
-        for value_temp in sort[:,2]:
+        for value_temp in np.unique(sort[:,2]):
             #calculate entropy of this split (add upper and lower)
             lower = data[data[:,k_temp]<=value_temp]
-            upper = data[data[:,k_temp]>value_temp]
+            upper = data[data[:,k_temp]>=value_temp]
             histlower ,_ = np.histogram(lower[:,-1],len(np.unique(lower[:,-1])));
             histupper, _ = np.histogram(upper[:,-1],len(np.unique(upper[:,-1])));
             entropylower = calculateEntropy(histlower);
             entropyupper = calculateEntropy(histupper);
             #if entropy is smaller 
+            print (entropylower+ entropyupper)
             if entropylower+entropyupper < entropy:
                 entropy = entropylower +entropyupper;
                 k = k_temp;
                 value = value_temp;
+                print 'k: ', k, 'value: ', value, 'entropy: ', entropy;
                 #save this attribute value pair as new optimal
     
     #random split
