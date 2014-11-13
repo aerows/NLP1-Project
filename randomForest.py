@@ -41,7 +41,44 @@ def trainDecisionTree(data, depth=0, tree = []):
         return tree
     
 def decisionStump(data):
-    K = data.shape[1]
-    k = np.random.randint(K-1);
-    value = np.mean(data[:,k]);
+    """Returns the optimal attribute and value for a tree to split on given
+    some data matrix"""
+    
+    #find atrribute and value where entropy of upper and lower are smallest
+    entropy = np.inf;
+    #for all attrbutes:
+    K = data.shape[1];
+    for k_temp in range(K):
+        #sort on values of that attribute
+        sort = data[data[:,2].argsort()]
+        #for all values
+        for value_temp in sort[:,2]:
+            #calculate entropy of this split (add upper and lower)
+            lower = data[data[:,k_temp]<=value_temp]
+            upper = data[data[:,k_temp]>value_temp]
+            histlower ,_ = np.histogram(lower[:,-1],len(np.unique(lower[:,-1])));
+            histupper, _ = np.histogram(upper[:,-1],len(np.unique(upper[:,-1])));
+            entropylower = calculateEntropy(histlower);
+            entropyupper = calculateEntropy(histupper);
+            #if entropy is smaller 
+            if entropylower+entropyupper < entropy:
+                entropy = entropylower +entropyupper;
+                k = k_temp;
+                value = value_temp;
+                #save this attribute value pair as new optimal
+    
+    #random split
+    #K = data.shape[1]
+    #k = np.random.randint(K-1);
+    #value = np.mean(data[:,k]);
     return k, value
+    
+def calculateEntropy(histogram):
+    if len(np.unique(histogram)) <= 1:
+        H = 0;
+    else:
+        H = 0;
+        prob = np.double(histogram)/sum(np.double(histogram));
+        for p in prob:
+            H += -p*np.log2(p);
+    return H
