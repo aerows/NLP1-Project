@@ -58,10 +58,8 @@ def decisionStump(data):
             #calculate entropy of this split (add upper and lower)
             lower = data[data[:,k_temp]<=value_temp]
             upper = data[data[:,k_temp]>=value_temp]
-            histlower ,_ = np.histogram(lower[:,-1],len(np.unique(lower[:,-1])));
-            histupper, _ = np.histogram(upper[:,-1],len(np.unique(upper[:,-1])));
-            entropylower = calculateEntropy(histlower);
-            entropyupper = calculateEntropy(histupper);
+            entropylower = calculateEntropy(lower);
+            entropyupper = calculateEntropy(upper);
             #if entropy is smaller 
             print (entropylower+ entropyupper)
             if entropylower+entropyupper < entropy:
@@ -77,10 +75,11 @@ def decisionStump(data):
     #value = np.mean(data[:,k]);
     return k, value
     
-def calculateEntropy(histogram):
-    if len(np.unique(histogram)) <= 1:
+def calculateEntropy(data):
+    if len(np.unique(data[:,-1])) <= 1:
         H = 0;
     else:
+        histogram = np.histogram(data[:,-1],len(np.unique(data[:,-1])));
         H = 0;
         prob = np.double(histogram)/sum(np.double(histogram));
         for p in prob:
