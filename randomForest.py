@@ -1,4 +1,8 @@
 import numpy as np
+def hasMultipleTargetClasses(data):
+    # Count the amount of unique target classes that are left in this node/leaf
+    # If more than one, the node is still unpure (and would require another split if possible)
+    return len(np.unique(data[:,-1])) > 1
 
 def trainRandomForest(traindata, Ntrees):
     """Creates a random forest model from the data"""
@@ -21,7 +25,7 @@ def trainRandomForest(traindata, Ntrees):
 def trainDecisionTree(data, depth=0, tree = []):
     """Returns the decision tree for some data"""
     #find optimal split
-    if len(np.unique(data[:,-1])) > 1:
+    if hasMultipleTargetClasses(data)
         d = depth
         splitFeature, splitValue = decisionStump(data)
         
@@ -36,9 +40,7 @@ def trainDecisionTree(data, depth=0, tree = []):
         #see if child nodes are "pure"
         #for all not pure and depth<max repeat
     
-        return tree
-    else:
-        return tree
+    return tree
     
 def decisionStump(data):
     """Returns the optimal attribute and value for a tree to split on given
