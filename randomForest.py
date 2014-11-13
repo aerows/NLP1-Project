@@ -22,21 +22,26 @@ def trainRandomForest(traindata, Ntrees):
     
     return model
 
-def trainDecisionTree(data, depth=0, tree = []):
+def trainDecisionTree(data, depth=0, tree = [], max_depth = None):
     """Returns the decision tree for some data"""
     #find optimal split
-    if hasMultipleTargetClasses(data):
+    if max_depth == None:
+        max_depth = 1 #data.shape[1]
+    majority = np.argmax(np.bincount(data[:,-1]))
+    if depth <= max_depth and hasMultipleTargetClasses(data):
         d = depth
         splitFeature, splitValue = decisionStump(data)
         
         lower = data[data[:,splitFeature]<=splitValue]
         upper = data[data[:,splitFeature]>splitValue]
         
-        tree_lower = trainDecisionTree(lower, depth=d+1, tree = tree)
-        tree_upper = trainDecisionTree(upper, depth=d+1, tree = tree)
-        
-        tree = tree.append([[splitFeature,splitValue],tree_lower,tree_upper]);
-        
+        tree_lower = trainDecisionTree(lower, depth=d+1, tree = tree, max_depth=max_depth)
+        tree_upper = trainDecisionTree(upper, depth=d+1, tree = tree, max_depth=max_depth)
+
+
+        tree = (splitFeature,splitValue,majority,tree_lower,tree_upper)
+    else:
+        tree = (None,None,majority,None,None)
         #see if child nodes are "pure"
         #for all not pure and depth<max repeat
     
@@ -54,19 +59,18 @@ def decisionStump(data):
         #sort on values of that attribute
         sort = data[data[:,k_temp].argsort()]
         #for all values
-        for value_temp in np.unique(sort[:,2]):
+        for value_temp in np.unique(sort[:,k_temp]):
             #calculate entropy of this split (add upper and lower)
             lower = data[data[:,k_temp]<=value_temp]
             upper = data[data[:,k_temp]>value_temp]
             entropylower = calculateEntropy(lower);
             entropyupper = calculateEntropy(upper);
-            #if entropy is smaller 
-            print (entropylower+ entropyupper)
-            if entropylower+entropyupper < entropy:
-                entropy = entropylower +entropyupper;
+            #if entropy is smaller
+            new_entropy = (len(lower)/len(data))*entropylower + (len(upper)/len(data))*entropyupper
+            if new_entropy < entropy:
+                entropy = new_entropy
                 k = k_temp;
                 value = value_temp;
-                print 'k: ', k, 'value: ', value, 'entropy: ', entropy;
                 #save this attribute value pair as new optimal
     
     #random split
@@ -80,8 +84,15 @@ def calculateEntropy(data):
         H = 0;
     else:
         histogram,_ = np.histogram(data[:,-1],len(np.unique(data[:,-1])));
+        histogram = histogram[histogram != 0]
         H = 0;
         prob = np.double(histogram)/sum(np.double(histogram));
         for p in prob:
             H += -p*np.log2(p);
     return H
+
+
+data = np.random.randint(5,size=(20,5))
+
+tree = trainDecisionTree(data,)
+print tree
