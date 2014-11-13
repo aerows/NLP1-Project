@@ -1,5 +1,6 @@
 import numpy as np
 def hasMultipleTargetClasses(data):
+    """Computes if the dataset is unpure"""
     # Count the amount of unique target classes that are left in this node/leaf
     # If more than one, the node is still unpure (and would require another split if possible)
     return len(np.unique(data[:,-1])) > 1
