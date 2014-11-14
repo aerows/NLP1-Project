@@ -55,7 +55,21 @@ def trainDecisionTree(data, depth=0, tree = [], max_depth = None):
         #for all not pure and depth<max repeat
     
     return tree
-    
+
+def makeDecisionTreePrediction(data_point, tree):
+    """Makes a prediction with a DT on one datapoint"""
+    (splitFeature,splitValue,majority,tree_lower,tree_upper) = tree
+
+    # If this is a leaf, return majority vote
+    if splitFeature is None:
+        return majority
+    # Else, split on split feature and recursively keep going until leaf node
+    else:
+        if data_point[splitFeature]<=splitValue:
+            return makeDecisionTreePrediction(data_point, tree_lower)
+        else:
+            return makeDecisionTreePrediction(data_point, tree_upper)
+
 def decisionStump(data):
     """Returns the optimal attribute and value for a tree to split on given
     some data matrix"""
@@ -103,5 +117,4 @@ def calculateEntropy(data):
 
 data = np.random.randint(5,size=(20,5))
 
-tree = trainDecisionTree(data,)
-print tree
+tree = trainDecisionTree(data)
