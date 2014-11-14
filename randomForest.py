@@ -5,7 +5,7 @@ def hasMultipleTargetClasses(data):
     # If more than one, the node is still unpure (and would require another split if possible)
     return len(np.unique(data[:,-1])) > 1
 
-def trainRandomForest(traindata, Ntrees):
+def trainRandomForest(traindata, Ntrees, bootstrapsize):
     """Creates a random forest model from the data"""
 
     # traindata: A matrix of all the data (NxK)
@@ -16,9 +16,17 @@ def trainRandomForest(traindata, Ntrees):
     for n in range(Ntrees):
     
         #bootstrap data
+        N = data.shape[0];
+        Nbootstrap = np.floor(bootstrapsize * N);
+        
+        np.random.shuffle(data);
+        
+        bootStrapData = data[0:Nbootstrap,:];
+        
+        bootStrapData = traindata;
         #set some number of features
         #set some max depth
-        tree = trainDecisionTree(bootStrapData, maxdepth) #train
+        tree = trainDecisionTree(bootStrapData) #train
         model[n] = tree
     
     return model
