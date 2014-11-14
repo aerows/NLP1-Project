@@ -4,24 +4,25 @@ def hasMultipleTargetClasses(data):
     # Count the amount of unique target classes that are left in this node/leaf
     # If more than one, the node is still unpure (and would require another split if possible)
     return len(np.unique(data[:,-1])) > 1
-
+def majorityVote(array):
+    return np.argmax(np.bincount(array.astype(int)))
 def trainRandomForest(traindata, Ntrees, bootstrapsize):
     """Creates a random forest model from the data"""
 
     # traindata: A matrix of all the data (NxK)
     # Ntrees: the number of trees that make up the forest
 
-    model = []#a list of all trees
+    model = [0]*Ntrees #a list of all trees
 
     for n in range(Ntrees):
     
         #bootstrap data
-        N = data.shape[0];
+        N = traindata.shape[0];
         Nbootstrap = np.floor(bootstrapsize * N);
         
-        np.random.shuffle(data);
+        np.random.shuffle(traindata);
         
-        bootStrapData = data[0:Nbootstrap,:];
+        bootStrapData = traindata[0:Nbootstrap,:];
         
         bootStrapData = traindata;
         #set some number of features
@@ -35,8 +36,10 @@ def trainDecisionTree(data, depth=0, tree = [], max_depth = None):
     """Returns the decision tree for some data"""
     #find optimal split
     if max_depth == None:
-        max_depth = 1 #data.shape[1]
-    majority = np.argmax(np.bincount(data[:,-1]))
+        max_depth = data.shape[1]
+
+    majority = majorityVote(data[:,-1])
+
     if depth <= max_depth and hasMultipleTargetClasses(data):
         d = depth
         splitFeature, splitValue = decisionStump(data)
@@ -55,6 +58,11 @@ def trainDecisionTree(data, depth=0, tree = [], max_depth = None):
         #for all not pure and depth<max repeat
     
     return tree
+def makeRandomForestPrediction(data_point, model):
+    predictions = []
+    for tree in model:
+        predictions.append(makeDecisionTreePrediction(data_point,tree))
+    return majorityVote(np.array(predictions))
 
 def makeDecisionTreePrediction(data_point, tree):
     """Makes a prediction with a DT on one datapoint"""
@@ -115,6 +123,6 @@ def calculateEntropy(data):
     return H
 
 
-data = np.random.randint(5,size=(20,5))
-
-tree = trainDecisionTree(data)
+# data = np.random.randint(5,size=(20,5))
+#
+# tree = trainDecisionTree(data)

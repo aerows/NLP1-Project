@@ -9,7 +9,7 @@ def flush_item():
                 (hn_object_id, doc_offset, created_at, story_id, parent_id, author, points, html_parser.unescape(comment_text)))
         except mdb.OperationalError, e: print repr(e)
         con.commit()
-f =  open('~/Documents/datasets/HNCommentsAll.json','r')
+f =  open('/Users/bas/Documents/datasets/HNCommentsAll.json','r')
 parser = parse(f)
 con = mdb.connect('127.0.0.1', 'root', '', 'nlpcorpus')
 cur = con.cursor()
