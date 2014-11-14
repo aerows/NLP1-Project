@@ -47,7 +47,9 @@ def trainDecisionTree(data, depth=0, tree = [], max_depth = None):
         #for all not pure and depth<max repeat
     
     return tree
-    
+
+def makeDecisionTreePrediction(data_point, tree):
+    pass
 def decisionStump(data):
     """Returns the optimal attribute and value for a tree to split on given
     some data matrix"""
