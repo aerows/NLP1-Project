@@ -20,3 +20,9 @@ def most_common_vocabulary(texts,num_words=None):
     count_dict = non_stop_word_count(full_text)
     common_vocabulary = [i[0] for i in count_dict.most_common(num_words)]
     return common_vocabulary
+    
+def num_words_in_document(text):
+    tokenizer = RegexpTokenizer(r'\w+')
+    tokens = tokenizer.tokenize(text)
+    numwords = len(tokens)
+    return numwords
