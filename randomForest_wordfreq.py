@@ -8,7 +8,7 @@ import pickle
 
 # Getting back the objects:
 with open('word_freq.pickle') as f:
-    train_word_freq_matrix, test_word_freq_matrix, common_vocabulary, train_author_ids,test_author_ids = pickle.load(f)
+    train_word_freq_matrix, test_word_freq_matrix, word_freq_fe, train_author_ids,test_author_ids = pickle.load(f)
 
 randomforest = ensemble.RandomForestClassifier(n_estimators=100, criterion='entropy')
 randomforest.fit(train_word_freq_matrix,train_author_ids)
