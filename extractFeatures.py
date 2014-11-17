@@ -5,6 +5,7 @@ from sklearn import ensemble
 import pickle
 from feature_lib.helper_functions import *
 from feature_extractors.word_freq import WordFreqFE
+from feature_extractors.factor_stop_words import FactorStopWordsFE
 
 INDEX_ID        = 0
 INDEX_TOPIC_ID  = 1
@@ -21,7 +22,7 @@ cur = con.cursor()
 cur.execute("SELECT * FROM `small_article`")
 results = cur.fetchall()
 # Parameters:
-num_words = 300
+num_words = 10
 
 train_corpus = []
 test_corpus = []
@@ -34,18 +35,19 @@ for row in results:
 
 
 word_freq_fe = WordFreqFE(num_words=num_words)
-train_word_freq_matrix = word_freq_fe.quantize_feature(texts_from_corpus(train_corpus))
-test_word_freq_matrix = word_freq_fe.quantize_feature(texts_from_corpus(test_corpus))
+stop_words_fe = FactorStopWordsFE()
+
+classifiers = [stop_words_fe]
+train_features = np.zeros((len(train_corpus),0))
+test_features = np.zeros((len(test_corpus),0))
+
+
+for classifier in classifiers:
+    train_features = np.concatenate((train_features, classifier.quantize_feature(texts_from_corpus(train_corpus))),axis=1)
+    test_features = np.concatenate((test_features, classifier.quantize_feature(texts_from_corpus(test_corpus))),axis=1)
 
 train_author_ids = [d[INDEX_AUTHOR_ID] for d in train_corpus]
 test_author_ids = [d[INDEX_AUTHOR_ID] for d in test_corpus]
 # Saving the objects:
 with open('word_freq.pickle', 'w') as f:
-    pickle.dump([train_word_freq_matrix, test_word_freq_matrix, word_freq_fe, train_author_ids,test_author_ids], f)
-
-
-
-
-
-
-
+    pickle.dump([train_features, test_features, word_freq_fe, train_author_ids,test_author_ids], f)

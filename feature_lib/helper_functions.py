@@ -27,7 +27,7 @@ def num_words_in_document(text):
     numwords = len(tokens)
     return numwords
     
-def num_stopwords(text):
+def num_stop_words(text):
     tokenizer = RegexpTokenizer(r'\w+')
     tokens = tokenizer.tokenize(text)
     stop_tokens = [w for w in tokens if w in nltk.corpus.stopwords.words('english')]
