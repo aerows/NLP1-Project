@@ -12,15 +12,16 @@ class AveragedPerceptronCM(ClassificationModel):
     def _train_classifier(self, T, D):
         itterations = 100
         
-        # initilize w as a size k vector with zeros
-        N,K = np.shape(D)
-        w = np.zeros(K)
+        N,M = np.shape(D)
+        
+        # initilize w, u as a size k vector with zeros
+        # initialize b, beta to zero
+
+        w = np.zeros(M)
+        u = np.zeros(M)
         b = 0.
-        u = np.zeros(K)
-        B = 0.
-        # initialize b to zero
-        # initilize u as a size k vector with zeros
-        # initialize B to zero
+        beta = 0.
+
         c = 1        
         for _ in range(itterations):
         #   for t,d in T,D do
@@ -35,14 +36,12 @@ class AveragedPerceptronCM(ClassificationModel):
                     b = b + t
         #           u = u + y * c * x
                     u = u + t * c * d
-        #           B = B + y * c
-                    B = B + t * c
-            #   c++
+        #           beta = beta + y * c
+                    beta = beta + t * c
+        #       c++
                 c += 1
-        #  return w - (1/N) * u, b - (1/N) * B
         self.w = w - (1/N) * u
-        self.b = b - (1/N) * B
-        return self.w, self.b
+        self.b = b - (1/N) * beta
         
     def _classify(self, D):
         T = np.sign(D.dot(self.w.T) + self.b)
