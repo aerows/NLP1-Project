@@ -58,4 +58,14 @@ def n_gram_vocabulary(text, n=2 , num_words = None):
         sentence = sentence.split()
         grams  = grams + tuple([tuple(sentence[i:i+n]) for i in xrange(len(sentence)-n)])
     return Counter(grams).most_common(num_words)
+    
+def num_n_grams_in_document(text, n=2):
+    tokenizer = RegexpTokenizer(r' ([A-Z][^\.!?]*[\.!?])')
+    sentences = tokenizer.tokenize(text)
+    grams = ()
+    for ind, sentence in enumerate(sentences):
+        sentence = sentence.split()
+        grams  = grams + tuple([tuple(sentence[i:i+n]) for i in xrange(len(sentence)-n)])
+    return len(grams)
+    
         

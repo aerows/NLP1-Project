@@ -24,4 +24,4 @@ class WordFreqFE(FeatureExtractor):
         return word_freq_matrix
 
     def _normalize_freq(self, word_freqs,text):
-        return np.divide(word_freqs,num_words_in_document(text))
+        return np.divide(np.float(word_freqs),num_words_in_document(text))
