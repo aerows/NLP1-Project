@@ -1,6 +1,8 @@
 import nltk
 from collections import Counter
 from nltk.tokenize import RegexpTokenizer
+import numpy as np
+import itertools
 
 def full_corpus_text(texts):
     full_text = ""
@@ -32,3 +34,28 @@ def num_stop_words(text):
     tokens = tokenizer.tokenize(text)
     stop_tokens = [w for w in tokens if w in nltk.corpus.stopwords.words('english')]
     return len(stop_tokens)
+    
+def num_sentences(text):
+    tokenizer = RegexpTokenizer(r' ([A-Z][^\.!?]*[\.!?])')
+    sentences = tokenizer.tokenize(text)
+    return len(sentences)
+    
+def average_sentence_length(text):
+    tokenizer = RegexpTokenizer(r' ([A-Z][^\.!?]*[\.!?])')
+    sentences = tokenizer.tokenize(text)
+    s = np.zeros(len(sentences))
+    for inds, sentence in enumerate(sentences):
+        tokenizer = RegexpTokenizer(r'\w+')
+        tokens = tokenizer.tokenize(sentence)
+        s[inds] = len(tokens)
+    return s, np.mean(s), np.std(s)
+    
+def n_gram_vocabulary(text, n=2 , num_words = None):
+    tokenizer = RegexpTokenizer(r' ([A-Z][^\.!?]*[\.!?])')
+    sentences = tokenizer.tokenize(text)
+    grams = ()
+    for ind, sentence in enumerate(sentences):
+        sentence = sentence.split()
+        grams  = grams + tuple([tuple(sentence[i:i+n]) for i in xrange(len(sentence)-n)])
+    return Counter(grams).most_common(num_words)
+        
