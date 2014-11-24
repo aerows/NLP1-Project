@@ -7,39 +7,40 @@ import numpy as np
 class AveragedPerceptronCM(ClassificationModel):
     def __init__(self):
         ClassificationModel.__init__(self)        
-        self.w = None
-        self.b = None
-        self.encoder = None
+        self.w = None                                           # Normalized weight matrix
+        self.b = None                                           # Normalized bias vector
+        self.encoder = OneHotEncoder()                          # One-hot encoder
 
     def _train_classifier(self, labels, data):
-        iterations = 100
+        iterations = 100                                        # Number of iterations, TODO: parameter
 
-        self.encoder = OneHotEncoder()
-        oh_labels = self.encoder.encode(labels, 1, -1)
+        oh_labels = self.encoder.encode(labels, 1, -1)          # Encode labels with values 1 and -1
 
-        _, k = np.shape(oh_labels)
-        n, m = np.shape(data)
+        _, k = np.shape(oh_labels)                              # Extract numbers of parameters
+        n, m = np.shape(data)                                   # k for classes, n for samples, m for features
 
-        w = np.zeros((m, k))
-        u = np.zeros((m, k))
-        b = np.zeros(k)[np.newaxis]
-        beta = np.zeros(k)[np.newaxis]
-        c = 1
-        for _ in range(iterations):
-            for i in range(n):
-                t = np.array(oh_labels[i, :])[np.newaxis]
-                d = np.array(data[i, :])[np.newaxis]
+        w = np.zeros((m, k))                                    # Instantiate weight matrix
+        u = np.zeros((m, k))                                    # Instantiate weighted weight matrix
+        b = np.zeros(k)[np.newaxis]                             # Instantiate bias vector
+        beta = np.zeros(k)[np.newaxis]                          # Instantiate weighted bias vector
+        c = 1                                                   # Instantiate weight counter
 
-                if np.argmax(d.dot(w) + b) != np.argmax(t):
-                    w += d.T.dot(t)
-                    b += t
-                    u += d.T.dot(t) * c
-                    beta += t * c
-                c += 1
-        self.w = w - (1/n) * u
-        self.b = b - (1/n) * beta
+        for _ in range(iterations):                             # For number of iterations
+            for i in range(n):                                  # For every sample
+                t = np.array(oh_labels[i, :])[np.newaxis]       # t is the ith label
+                d = np.array(data[i, :])[np.newaxis]            # d is the ith data sample
+
+                if np.argmax(d.dot(w) + b) != np.argmax(t):     # If t is not the most likely label for d
+                    w += d.T.dot(t)                             # Update the weight matrix
+                    b += t                                      # Update the bias vector
+                    u += d.T.dot(t) * c                         # Update the weighted weight matrix
+                    beta += t * c                               # Update the weighted bias vector
+                c += 1                                          # Update weight counter
+
+        self.w = w - (1/c) * u                                  # Store normalized weight matrix
+        self.b = b - (1/c) * beta                               # Store normalized bias vector
 
     def _classify_data(self, data):
-        soft_one_hot = (data.dot(self.w) + self.b)
-        predicted_labels = self.encoder.decode_soft(soft_one_hot)
+        soft_one_hot = (data.dot(self.w) + self.b)                  # Predicted label values
+        predicted_labels = self.encoder.decode_soft(soft_one_hot)   # Most likely predicted label values
         return predicted_labels

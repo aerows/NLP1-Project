@@ -7,13 +7,13 @@ from sklearn import ensemble
 class RandomForestCM(ClassificationModel):
     def __init__(self):
         ClassificationModel.__init__(self)
-        self.randomforest = ensemble.RandomForestClassifier(n_estimators=10, criterion='entropy')
+        self.random_forest = ensemble.RandomForestClassifier(n_estimators=10, criterion='entropy')
 
     def _train_classifier(self, T, D):
         """ Should be subclassed """
-        self.randomforest.fit(D, T)
+        self.random_forest.fit(D, T)
 
     def _classify_data(self, D):
         """ Should be subclassed """
-        T = self.randomforest.predict(D)
+        T = self.random_forest.predict(D)
         return T
