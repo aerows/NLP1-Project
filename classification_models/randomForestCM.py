@@ -13,7 +13,7 @@ class RandomForestCM(ClassificationModel):
         """ Should be subclassed """
         self.randomforest.fit(D, T)
 
-    def _classify(self, D):
+    def _classify_data(self, D):
         """ Should be subclassed """
         T = self.randomforest.predict(D)
         return T

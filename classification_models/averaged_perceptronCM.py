@@ -1,48 +1,45 @@
 # -*- coding: utf-8 -*-
 from classification_model import ClassificationModel
-
+from preprocess import OneHotEncoder
 import numpy as np
+
 
 class AveragedPerceptronCM(ClassificationModel):
     def __init__(self):
-        ClassificationModel.__init__(self)
-        self.w = []
-        self.b = 0
+        ClassificationModel.__init__(self)        
+        self.w = None
+        self.b = None
+        self.encoder = None
 
-    def _train_classifier(self, T, D):
-        itterations = 100
-        
-        N,M = np.shape(D)
-        
-        # initilize w, u as a size k vector with zeros
-        # initialize b, beta to zero
+    def _train_classifier(self, labels, data):
+        iterations = 100
 
-        w = np.zeros(M)
-        u = np.zeros(M)
-        b = 0.
-        beta = 0.
+        self.encoder = OneHotEncoder()
+        oh_labels = self.encoder.encode(labels, 1, -1)
 
-        c = 1        
-        for _ in range(itterations):
-        #   for t,d in T,D do
-            for i in range(N):
-                t = T[i]
-                d = D[i,:]
-        #       if (t(w * x + b) ≤ 0 then
-                if t*(w.dot(d.T) + b) <= 0:
-        #           w = w + y * x
-                    w = w + t * d.T
-        #           b = b + y
-                    b = b + t
-        #           u = u + y * c * x
-                    u = u + t * c * d
-        #           beta = beta + y * c
-                    beta = beta + t * c
-        #       c++
+        _, k = np.shape(oh_labels)
+        n, m = np.shape(data)
+
+        w = np.zeros((m, k))
+        u = np.zeros((m, k))
+        b = np.zeros(k)[np.newaxis]
+        beta = np.zeros(k)[np.newaxis]
+        c = 1
+        for _ in range(iterations):
+            for i in range(n):
+                t = np.array(oh_labels[i, :])[np.newaxis]
+                d = np.array(data[i, :])[np.newaxis]
+
+                if np.argmax(d.dot(w) + b) != np.argmax(t):
+                    w += d.T.dot(t)
+                    b += t
+                    u += d.T.dot(t) * c
+                    beta += t * c
                 c += 1
-        self.w = w - (1/N) * u
-        self.b = b - (1/N) * beta
-        
-    def _classify(self, D):
-        T = np.sign(D.dot(self.w.T) + self.b)
-        return T
+        self.w = w - (1/n) * u
+        self.b = b - (1/n) * beta
+
+    def _classify_data(self, data):
+        soft_one_hot = (data.dot(self.w) + self.b)
+        predicted_labels = self.encoder.decode_soft(soft_one_hot)
+        return predicted_labels

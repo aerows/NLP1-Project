@@ -1,46 +1,94 @@
 import numpy as np
 
-class ClassificationModel:
+
+class ClassificationModel(object):
     def __init__(self):
         pass
 
-    def train_classifier(self, T, D):
-        """ Train classifier on T and D
-        
-	    Arguments:
-	       T -- the labels, a one dimensional vector of size N
-	       D -- the data, a two dimensionel vector of size NxK
-	"""
-        assert len(np.shape(T)) == 1, "Labels [T] should be a vector"
-        assert len(np.shape(D)) == 2, "Data [D], should be a matrix"
-        assert np.shape(T)[0] == np.shape(D)[0], "Number of Lables [T] should equal number of Data [D]"
-        
-        self._train_classifier(T,D)
-        
-    def classifiy(self, D):        
-        """ Classifiy data D
+    def train_classifier(self, labels, data):
+        """ Train classifier on labels and data
 
-	   Arguments:
-	       D -- the data, a two dimensionel vector of size NxK
-	       
-	   Return:
-	       T -- the predicted labels, a one dimensional vector of size N
-	"""
-        assert len(np.shape(D)) == 2, "Data [D], should be a matrix"
-        return self._classify(D)
+        Args:
+            labels: a one dimensional vector of size N
+            data: a two dimensional vector of size NxK
+        Raises:
+            AssertionError: if labels is not a one-dimensional matrix.
+            AssertionError: if data is not a two-dimensional matrix.
+            AssertionError: if labels and data have different length.
 
-# To be subclassed
+        """
+        assert len(np.shape(labels)) == 1, ":labels should be a vector"
+        assert len(np.shape(data)) == 2, ":data should be a matrix"
+        assert np.shape(labels)[0] == np.shape(data)[0], "length of :labels should equal length of :data"
+        
+        self._train_classifier(labels, data)
+        
+    def classify_data(self, data):
+        """Classifies unclassified data.
 
-    def _classify(self, D):
-        """ Should be subclassed """
-        print "Should be subclassed"
-        return None
-    
-    def _train_classifier(self, T, D):
-        """ Should be subclassed """
-        print "Should be subclassed"
-        
-        
-       
-        
-    
+        Args:
+            data: The data to be classified
+        Returns:
+            predicted_labels: The predicted labels
+        Raises:
+            AssertionError: if data is not a two-dimensional matrix.
+
+        """
+
+        assert len(np.shape(data)) == 2, "Data [data], should be a matrix"
+        predicted_labels = self._classify_data(data)
+        return predicted_labels
+
+    def test_classifier(self, labels, data):
+        """ Tests the performance of the classification model.
+
+        Args:
+            labels: the correct labels, a one dimensional vector of size N
+            data: the data, a two dimensional vector of size NxK
+        Returns:
+            q: the ratio of correctly labeled data points
+            predicted_labels: The predicted labels
+        Raises:
+            AssertionError: if labels is not a one-dimensional matrix.
+            AssertionError: if data is not a two-dimensional matrix.
+            AssertionError: if labels and data have different length.
+
+        """
+        assert len(np.shape(labels)) == 1, ":labels should be a vector"
+        assert len(np.shape(data)) == 2, ":data should be a matrix"
+        assert np.shape(labels)[0] == np.shape(data)[0], "length of :labels should equal length of :data"
+
+        predicted_labels = self.classify_data(data)
+        q = np.mean(predicted_labels == labels)
+        return q, predicted_labels
+
+    def _classify_data(self, data):
+        """ SHOULD NOT BE CALLED DIRECTLY!
+
+        Private method for classifying data to be overridden by subclasses.
+
+        Args:
+            data: the data, a two dimensional vector of size NxK
+        Returns:
+            predicted_labels: The predicted labels
+
+        """
+        assert False, "Should be subclassed"
+
+    def _train_classifier(self, labels, data):
+        """ SHOULD NOT BE CALLED DIRECTLY!
+
+        Private method for training model on labeled data.
+
+        Args:
+            labels: a one dimensional vector of size N
+            data: a two dimensional vector of size NxK
+
+        """
+        assert False, "Should be subclassed"
+
+
+
+
+
+
