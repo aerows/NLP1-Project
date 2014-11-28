@@ -7,7 +7,9 @@ class DatasetData(Data):
 
     def __init__(self,dataset,features):
         Data.__init__(self)
+        self.features = features
         self.data, self.labels = self._compute_features_dataset(dataset)
+
     def _data(self):
         return self.data
 
