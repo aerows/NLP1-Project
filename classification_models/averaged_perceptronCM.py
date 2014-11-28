@@ -5,14 +5,26 @@ import numpy as np
 
 
 class AveragedPerceptronCM(ClassificationModel):
-    def __init__(self):
-        ClassificationModel.__init__(self)        
+    """ Multi-class averaged perceptron.
+
+    Kwargs:
+        max_iter (int):  Number of iterations the classifier should be trained (default 100)
+
+    Attributes:
+        w (float np-array):       Normalized feature weights
+        b (float np-array):       Normalized bias
+        encoder (OneHotEncoder):  Translator from categorical labels to one hot format
+
+    """
+
+    def __init__(self, max_iter=100):
+        ClassificationModel.__init__(self)
+        self.max_iter = max_iter                                # Maximum number of iterations
         self.w = None                                           # Normalized weight matrix
         self.b = None                                           # Normalized bias vector
         self.encoder = OneHotEncoder()                          # One-hot encoder
 
     def _train_classifier(self, labels, data):
-        iterations = 100                                        # Number of iterations, TODO: parameter
 
         oh_labels = self.encoder.encode(labels, 1, -1)          # Encode labels with values 1 and -1
 
@@ -25,7 +37,7 @@ class AveragedPerceptronCM(ClassificationModel):
         beta = np.zeros(k)[np.newaxis]                          # Instantiate weighted bias vector
         c = 1                                                   # Instantiate weight counter
 
-        for _ in range(iterations):                             # For number of iterations
+        for _ in range(self.max_iter):                          # For number of iterations
             for i in range(n):                                  # For every sample
                 t = np.array(oh_labels[i, :])[np.newaxis]       # t is the ith label
                 d = np.array(data[i, :])[np.newaxis]            # d is the ith data sample

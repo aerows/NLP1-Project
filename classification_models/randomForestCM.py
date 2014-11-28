@@ -5,15 +5,27 @@ from sklearn import ensemble
 
 
 class RandomForestCM(ClassificationModel):
-    def __init__(self):
+    """ Random Forest Classifier
+
+    Kwargs:
+        n_estimators (int): Number of estimators (default=10)
+        max_depth (int):    Max depth of individual trees (default=None)
+
+    Attributes:
+        random_forest (RandomForestClassifier): sklearn library's random forest classifier object
+    """
+
+    def __init__(self, n_estimators=10, max_depth=None):
         ClassificationModel.__init__(self)
-        self.random_forest = ensemble.RandomForestClassifier(n_estimators=10, criterion='entropy')
+        self.random_forest = ensemble.RandomForestClassifier(n_estimators=n_estimators,
+                                                             criterion='entropy',
+                                                             max_depth=max_depth)
 
-    def _train_classifier(self, T, D):
-        """ Should be subclassed """
-        self.random_forest.fit(D, T)
+    def _train_classifier(self, labels, data):
+        """ """
+        self.random_forest.fit(data, labels)
 
-    def _classify_data(self, D):
-        """ Should be subclassed """
-        T = self.random_forest.predict(D)
-        return T
+    def _classify_data(self, data):
+        """ """
+        labels = self.random_forest.predict(data)
+        return labels

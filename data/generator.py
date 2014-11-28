@@ -14,7 +14,7 @@ class Generator(Data):
         Data.__init__(self)
         self.means = rnd.uniform(mean_low, mean_high, (k, m))
         self.divs = rnd.uniform(div_low, div_high, (k, m))
-        self.data, self.labels = self._generateData(k, n, m, self.means, self.divs)
+        self.data, self.labels = self._generate_data(k, n, m, self.means, self.divs)
 
     def _data(self):
         return self.data
@@ -25,7 +25,7 @@ class Generator(Data):
     def _number_of_samples(self):
         return len(self.labels)
 
-    def _generateData(self, k, n, m,  means, divs):
+    def _generate_data(self, k, n, m,  means, divs):
         data = np.zeros((n, m))
         labels = np.zeros(n)
         for i in range(n):
