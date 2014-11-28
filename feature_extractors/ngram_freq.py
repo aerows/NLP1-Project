@@ -11,7 +11,7 @@ class NGramFreq(FeatureExtractor):
 
     def quantize_feature(self,texts):
         if self.common_vocabulary is None:
-            self.common_vocabulary = n_gram_vocabulary(texts,n,self.num_words)
+            self.common_vocabulary = n_gram_vocabulary(texts,self.n,self.num_words)
 
         n_gram_freq_matrix = np.zeros((len(texts),self.num_words))
         for index,text in enumerate(texts):
@@ -19,7 +19,7 @@ class NGramFreq(FeatureExtractor):
             # TODO: Normalize by number of words in documents
             n_gram_freqs = np.double(np.array([count_dict.get(key_word,0) for key_word in self.common_vocabulary]))
             # Normalize it
-            n_gram_freqs = self._normalize_freq(word_freqs,text)
+            n_gram_freqs = self._normalize_freq(n_gram_freqs,text)
             n_gram_freq_matrix[index,:] = n_gram_freqs
 
         return n_gram_freq_matrix
