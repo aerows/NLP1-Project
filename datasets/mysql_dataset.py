@@ -11,7 +11,7 @@ class MysqlDataset(object):
     def all_author_ids(self):
         self.cur.execute("SELECT author_id FROM %s" % self.table_name)
         results = self.cur.fetchall()
-        return [doc[0] for doc in results]
+        return np.array([int(doc[0]) for doc in results])
 
     def dataset_size(self):
         self.cur.execute("SELECT COUNT(*) FROM %s" % self.table_name)
@@ -22,3 +22,6 @@ class MysqlDataset(object):
         self.cur.execute("SELECT text FROM %s" % self.table_name)
         results = self.cur.fetchall()
         return [doc[0] for doc in results]
+
+    def concatenated_texts(self):
+        return " ".join(self.all_texts())

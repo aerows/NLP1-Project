@@ -15,6 +15,7 @@ class NGramFreq(FeatureExtractor):
 
         n_gram_freq_matrix = np.zeros((len(texts),self.num_words))
         for index,text in enumerate(texts):
+            # TODO: this doesn't take n-grams into account, now we compare ngrams with individual words
             count_dict = non_stop_word_count(text)
             # TODO: Normalize by number of words in documents
             n_gram_freqs = np.double(np.array([count_dict.get(key_word,0) for key_word in self.common_vocabulary]))
@@ -25,4 +26,4 @@ class NGramFreq(FeatureExtractor):
         return n_gram_freq_matrix
 
     def _normalize_freq(self, n_gram_freqs,text):
-        return np.divide(float(n_gram_freqs),num_n_grams_in_document(text))
+            return np.divide(float(n_gram_freqs),num_n_grams_in_document(text))

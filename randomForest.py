@@ -15,7 +15,7 @@ def trainRandomForest(traindata, Ntrees, bootstrapsize):
     model = [0]*Ntrees #a list of all trees
 
     for n in range(Ntrees):
-    
+        # TODO: This is not bootstrapping right? just a random shuffle of the data and taking the first x elements
         #bootstrap data
         N = traindata.shape[0];
         Nbootstrap = np.floor(bootstrapsize * N);

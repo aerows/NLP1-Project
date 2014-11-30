@@ -2,6 +2,7 @@ from feature_extractor import FeatureExtractor
 from feature_lib.helper_functions import *
 import numpy as np
 
+# TODO: Fix this
 class WordsPerSentanceFE(FeatureExtractor):
     def __init__(self,sentance_length_range=None):
         self.sentance_length_range = sentance_length_range
