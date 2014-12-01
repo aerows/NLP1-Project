@@ -5,7 +5,7 @@ class ClassificationModel(object):
     def __init__(self):
         pass
 
-    def train_classifier(self, labels, data):
+    def train_classifier(self, data,labels):
         """ Train classifier on labels and data
 
         Args:
@@ -39,12 +39,12 @@ class ClassificationModel(object):
         predicted_labels = self._classify_data(data)
         return predicted_labels
 
-    def test_classifier(self, labels, data):
+    def test_classifier(self, data, labels):
         """ Tests the performance of the classification model.
 
         Args:
-            labels: the correct labels, a one dimensional vector of size N
             data: the data, a two dimensional vector of size NxK
+            labels: the correct labels, a one dimensional vector of size N
         Returns:
             q: the ratio of correctly labeled data points
             predicted_labels: The predicted labels

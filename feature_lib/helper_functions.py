@@ -52,6 +52,8 @@ def average_sentence_length(text):
     
 def n_gram_vocabulary(text, n=2 , num_words = None):
     tokenizer = RegexpTokenizer(r' ([A-Z][^\.!?]*[\.!?])')
+    if isinstance(text,list):
+        text = " ".join(text)
     sentences = tokenizer.tokenize(text)
     grams = ()
     for ind, sentence in enumerate(sentences):

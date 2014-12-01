@@ -22,7 +22,7 @@ class Generator(Data):
     def _labels(self):
         return self.labels
 
-    def _number_of_samples(self):
+    def number_of_samples(self):
         return len(self.labels)
 
     def _generate_data(self, k, n, m,  means, divs):
