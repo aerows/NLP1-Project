@@ -11,7 +11,7 @@ class KMeansNGram(FeatureExtractor):
         self.k = k
         self.texts = texts
         # Compute n-gram vocabulary
-        combined_patch_matrix,_ = self.extract_patches()
+        combined_patch_matrix,_ = self.extract_patches(self.texts)
         self.kmeans = self.compute_kmeans(combined_patch_matrix)
 
     def normalize_hist(self, hist):
@@ -21,6 +21,7 @@ class KMeansNGram(FeatureExtractor):
         texts_centroids, texts_one_hot = self.compute_centroids(texts)
         texts_hist = []
         for assignments in texts_one_hot:
+            print '.',
             # Sum up the assignments (which are one-hot) to get a histogram over the clusters
             hist = np.sum(assignments,0)
 
@@ -28,6 +29,7 @@ class KMeansNGram(FeatureExtractor):
 
             # Normalize the histogram and append to list
             texts_hist.append(self.normalize_hist(hist))
+        texts_hist = np.array(texts_hist)
         assert texts_hist.shape == (len(texts),self.k), "Should be n by k"
         return texts_hist
 
@@ -60,13 +62,12 @@ class KMeansNGram(FeatureExtractor):
 
         return kmeans
 
-    def extract_patches(self):
+    def extract_patches(self,texts):
         """
         Create a matrix of all patches in all texts
         :param texts: list of texts
         :return: combined_patch_matrix: a matrix of all patches
         """
-        texts = self.texts
         n = self.n
         step_size = self.step_size
         assert isinstance(texts[0], unicode), "Text must be unicode"
