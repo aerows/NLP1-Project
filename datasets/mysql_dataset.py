@@ -21,7 +21,7 @@ class MysqlDataset(object):
     def all_texts(self):
         self.cur.execute("SELECT text FROM %s" % self.table_name)
         results = self.cur.fetchall()
-        return [doc[0] for doc in results]
+        return [doc[0].decode('unicode-escape') for doc in results]
 
     def concatenated_texts(self):
         return " ".join(self.all_texts())
