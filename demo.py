@@ -17,7 +17,7 @@ features = [
     # NGramFreq(2,400)
 ]
 dataset = MysqlDatasetData(MysqlDataset("small_article"),features)
-s
+
 data_train,labels_train,data_test,labels_test = dataset.fold()
 # Todo: cross validation
 # Train model

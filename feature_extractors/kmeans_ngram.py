@@ -4,20 +4,26 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 class KMeansNGram(FeatureExtractor):
-    def __init__(self,texts,n=16,step_size=1,k=400):
+    def __init__(self,texts=None,n=16,step_size=1,k=100,kmeans_args = None):
         FeatureExtractor.__init__(self)
         self.n = n
         self.step_size = step_size
         self.k = k
-        self.texts = texts
-        # Compute n-gram vocabulary
-        combined_patch_matrix,_ = self.extract_patches(self.texts)
-        self.kmeans = self.compute_kmeans(combined_patch_matrix)
+        self.kmeans=None
+        self.kmeans_args = kmeans_args
+        FeatureExtractor.__init__(self)
+
+    def initialise_kmeans(self,texts):
+        if self.kmeans == None:
+            combined_patch_matrix,_ = self.extract_patches(texts)
+            self.kmeans = self.compute_kmeans(combined_patch_matrix)
 
     def normalize_hist(self, hist):
         return np.divide(hist,np.sum(hist))
 
     def quantize_feature(self,texts):
+        self.initialise_kmeans(texts)
+
         texts_centroids, texts_one_hot = self.compute_centroids(texts)
         texts_hist = []
         for assignments in texts_one_hot:
@@ -57,7 +63,10 @@ class KMeansNGram(FeatureExtractor):
         return texts_centroids, texts_one_hot
     def compute_kmeans(self,combined_patch_matrix):
         # TODO: Look at initialisation options
-        kmeans = KMeans(n_clusters=self.k,n_jobs=1)
+        print "Computing k_means..."
+        if self.kmeans_args == None:
+            self.kmeans_args = dict(n_clusters=self.k,n_jobs=1,max_iter=50,verbose=True,n_init=2)
+        kmeans = KMeans(**self.kmeans_args)
         kmeans.fit(combined_patch_matrix)
 
         return kmeans
