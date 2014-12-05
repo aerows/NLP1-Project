@@ -13,16 +13,25 @@ class KMeansNGram(FeatureExtractor):
         self.kmeans_args = kmeans_args
         FeatureExtractor.__init__(self)
 
-    def initialise_kmeans(self,texts):
+    def initialise_kmeans(self,texts,labels):
+        num_texts = 1
+        unique_labels = set(labels)
+
+        vocab_texts = []
+        for label in unique_labels:
+            indexes = [i for i,x in enumerate(labels) if x == label][0:num_texts]
+            for i in indexes:
+                vocab_texts.append(texts[i])
+
         if self.kmeans == None:
-            combined_patch_matrix,_ = self.extract_patches(texts)
+            combined_patch_matrix,_ = self.extract_patches(vocab_texts)
             self.kmeans = self.compute_kmeans(combined_patch_matrix)
 
     def normalize_hist(self, hist):
         return np.divide(hist,np.sum(hist))
 
-    def quantize_feature(self,texts):
-        self.initialise_kmeans(texts)
+    def quantize_feature(self, texts, labels):
+        self.initialise_kmeans(texts,labels)
 
         texts_centroids, texts_one_hot = self.compute_centroids(texts)
         texts_hist = []
@@ -79,6 +88,7 @@ class KMeansNGram(FeatureExtractor):
         """
         n = self.n
         step_size = self.step_size
+        print type(texts[0])
         assert isinstance(texts[0], unicode), "Text must be unicode"
 
 

@@ -9,7 +9,7 @@ class NGramFreq(FeatureExtractor):
         self.common_vocabulary = common_vocabulary
         FeatureExtractor.__init__(self)
 
-    def quantize_feature(self,texts):
+    def quantize_feature(self, texts, labels):
         if self.common_vocabulary is None:
             self.common_vocabulary = n_gram_vocabulary(texts,self.n,self.num_words)
 

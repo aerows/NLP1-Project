@@ -10,6 +10,7 @@ from feature_extractors.words_per_sentence import WordsPerSentanceFE
 from feature_extractors.word_freq import WordFreqFE
 from feature_extractors.kmeans_ngram import KMeansNGram
 import pickle
+import collections
 n=5
 try:
     pkl_file = open("kmeansngramdemo_hn_%d.pickle" % n, 'rb')
@@ -28,12 +29,12 @@ except:
     pkl_file = open("kmeansngramdemo_hn_%d.pickle" % n, 'wb')
     pickle.dump(dataset,pkl_file)
 
-
 data_train,labels_train,data_test,labels_test = dataset.fold()
+print collections.Counter(labels_train)
 # Todo: cross validation
 # Train model
-model = RandomForestCM(n_estimators=10000)
-# model = AveragedPerceptronCM(max_iter=2000)
+model = RandomForestCM(n_estimators=1000)
+# model = AveragedPerceptronCM(max_iter=200)
 model.train_classifier(data_train,labels_train)
 
 # Test model
