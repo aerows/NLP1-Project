@@ -8,7 +8,7 @@ class WordsPerSentanceFE(FeatureExtractor):
         self.sentance_length_range = sentance_length_range
         FeatureExtractor.__init__(self)
 
-    def quantize_feature(self,texts):
+    def quantize_feature(self, texts, labels):
         if self.common_vocabulary is None:
             self.common_vocabulary = most_common_vocabulary(texts,self.num_words)
 

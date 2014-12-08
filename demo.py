@@ -1,6 +1,7 @@
 import numpy as np
 import MySQLdb as mdb
 from classification_models.randomForestCM import *
+from classification_models.averaged_perceptronCM import *
 from datasets.mysql_dataset import MysqlDataset
 from data.dataset_data import MysqlDatasetData
 from feature_extractors.factor_stop_words import FactorStopWordsFE
@@ -21,7 +22,6 @@ data_train, labels_train, data_test, labels_test = dataset.fold(training_ratio=0
 # Train model
 model = RandomForestCM()
 model.train_classifier(data_train, labels_train)
-
 
 # Test model
 q, pred_labels = model.test_classifier(data_test, labels_test)

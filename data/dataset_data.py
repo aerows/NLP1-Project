@@ -10,20 +10,22 @@ class MysqlDatasetData(Data):
         self.features = features
         self.dataset = dataset
         self._compute_features_dataset(dataset)
-    def fold(self):
-        # TODO: generalize this for all dataset models
-        n = self.number_of_samples()
 
-        assert n % 3  == 0, "Every author should have 3 documents!"
+    def fold(self):
+        n = self.number_of_samples()
+        labels = self.labels
+        n_test  = 2
 
         training_indexes = []
         testing_indexes = []
 
-        # We want every 3th article to be a testing article (assuming that every author has exactly 3 documents!)
-        for i in range(n):
-            if i % 3 == 0:
+        # We want every 3rd article to be a testing article (assuming that every author has exactly 3 documents!)
+        for label in set(labels):
+            indexes_test = [i for i,x in enumerate(labels) if x == label][-n_test:]
+            indexes_train = [i for i,x in enumerate(labels) if x == label][0:-n_test]
+            for i in indexes_test:
                 testing_indexes.append(i)
-            else:
+            for i in indexes_train:
                 training_indexes.append(i)
         return (self._data())[training_indexes], (self._labels())[training_indexes], self._data()[testing_indexes], self._labels()[testing_indexes]
     def _data(self):
@@ -37,9 +39,10 @@ class MysqlDatasetData(Data):
 
     def _compute_features_dataset(self,dataset):
         self.data = np.zeros((dataset.dataset_size(),0))
-        self.labels = []
-        for feature in self.features:
-            # TODO: Properly concatenate the feature matrices
-            feature_matrix = feature.quantize_feature(dataset.all_texts())
-            self.data =np.concatenate((self.data, feature_matrix),1)
         self.labels = dataset.all_author_ids()
+        for feature in self.features:
+            # TODO: use a subset of the texts
+            all_text = dataset.all_texts()
+            feature_matrix = feature.quantize_feature(all_text,self.labels)
+            self.data =np.concatenate((self.data, feature_matrix),1)
+
