@@ -12,18 +12,18 @@ from feature_extractors.word_freq import WordFreqFE
 features = [
     FactorStopWordsFE(),
     WordFreqFE(400),
-    #WordsPerSentanceFE(), # Not implemented properly yet!
-    NGramFreq(2,400)
+    # WordsPerSentanceFE(), # Not implemented properly yet!
+    NGramFreq(2, 400)
 ]
 dataset = MysqlDatasetData(MysqlDataset("small_article"),features)
 
-data_train,labels_train,data_test,labels_test = dataset.fold(training_ratio=0.9, testing_ratio=0.2)
+data_train, labels_train, data_test, labels_test = dataset.fold(training_ratio=0.9, testing_ratio=0.2)
 # Train model
 model = RandomForestCM()
-model.train_classifier(data_train,labels_train)
+model.train_classifier(data_train, labels_train)
 
 
 # Test model
-q, pred_labels = model.test_classifier(data_test,labels_test)
+q, pred_labels = model.test_classifier(data_test, labels_test)
 print q
 print pred_labels
