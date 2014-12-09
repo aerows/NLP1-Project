@@ -137,7 +137,7 @@ def dice_coefficient(a,b):
         else:
             j += 1
  
-    score = float(matches)/float(lena + lenb)e
+    score = float(matches)/float(lena + lenb)
     return score
 
 
