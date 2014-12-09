@@ -35,4 +35,4 @@ class Generator(Data):
             labels[i] = label
             for j in range(self.m):
                 data[i,j] = rnd.normal(self.means[label, j], self.divs[label, j],1)
-        return data, labels
+        return data, np.squeeze(np.asarray(labels))

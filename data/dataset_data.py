@@ -1,11 +1,11 @@
 import numpy.random as rnd
 import numpy as np
 from data import Data
-from datasets import mysql_dataset
+# from datasets import mysql_dataset
 
 class MysqlDatasetData(Data):
 
-    def __init__(self,dataset,features):
+    def __init__(self, dataset,features):
         Data.__init__(self)
         self.features = features
         self.dataset = dataset

@@ -2,6 +2,7 @@
 from classification_model import ClassificationModel
 from preprocess import OneHotEncoder
 import numpy as np
+import data.generator as gen
 
 
 class AveragedPerceptronCM(ClassificationModel):
@@ -56,3 +57,14 @@ class AveragedPerceptronCM(ClassificationModel):
         soft_one_hot = (data.dot(self.w) + self.b)                  # Predicted label values
         predicted_labels = self.encoder.decode_soft(soft_one_hot)   # Most likely predicted label values
         return predicted_labels
+
+generator = gen.Generator(k=200, n=0, m=50)
+ap = AveragedPerceptronCM()
+
+trainData, trainLabel = generator.generate_data(600)
+
+ap.train_classifier(trainData, trainLabel)
+
+testData, testLabel = generator.generate_data(200)
+
+print ap.test_classifier(testData, testLabel)

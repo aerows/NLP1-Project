@@ -137,5 +137,12 @@ def dice_coefficient(a,b):
         else:
             j += 1
  
-    score = float(matches)/float(lena + lenb)
+    score = float(matches)/float(lena + lenb)e
     return score
+
+
+def vocabulary(texts):
+    voc = set()
+    for text in texts:
+        voc.union(nltk.set(text))
+    return voc

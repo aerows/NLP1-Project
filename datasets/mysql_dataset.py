@@ -2,6 +2,7 @@ import numpy.random as rnd
 import numpy as np
 import MySQLdb as mdb
 
+
 class MysqlDataset(object):
     def __init__(self, table_name):
         self.table_name = table_name

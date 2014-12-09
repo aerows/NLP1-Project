@@ -1,8 +1,3 @@
-import nltk
-import numpy as np
-from collections import Counter
-from nltk.tokenize import RegexpTokenizer
-import MySQLdb as mdb
 from sklearn import ensemble
 import pickle
 
