@@ -5,7 +5,6 @@ from sklearn.cluster import KMeans
 
 class KMeansNGram(FeatureExtractor):
     def __init__(self,texts=None,n=16,step_size=1,k=100,kmeans_args = None):
-        FeatureExtractor.__init__(self)
         self.n = n
         self.step_size = step_size
         self.k = k
@@ -88,7 +87,6 @@ class KMeansNGram(FeatureExtractor):
         """
         n = self.n
         step_size = self.step_size
-        print type(texts[0])
         assert isinstance(texts[0], unicode), "Text must be unicode"
 
 
@@ -102,7 +100,7 @@ class KMeansNGram(FeatureExtractor):
         # Take n-grams of text
         for text in char_texts:
             amount_of_patches = (len(text)-n)/step_size
-            # TODO: Figure out rowcal for patches and patch size
+
             patch_matrix = np.zeros((amount_of_patches,n)) # patch per row.
             for i in range(0,len(text)-n,step_size):
                 patch_matrix[i,:] = text[i:i+n]

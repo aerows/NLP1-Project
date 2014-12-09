@@ -11,10 +11,9 @@ class MysqlDatasetData(Data):
         self.dataset = dataset
         self._compute_features_dataset(dataset)
 
-    def fold(self):
+    def fold(self,n_test):
         n = self.number_of_samples()
         labels = self.labels
-        n_test  = 2
 
         training_indexes = []
         testing_indexes = []
