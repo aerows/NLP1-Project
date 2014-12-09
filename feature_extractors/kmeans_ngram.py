@@ -5,7 +5,6 @@ from sklearn.cluster import KMeans
 
 class KMeansNGram(FeatureExtractor):
     def __init__(self,texts=None,n=16,step_size=1,k=100,kmeans_args = None):
-        FeatureExtractor.__init__(self)
         self.n = n
         self.step_size = step_size
         self.k = k
