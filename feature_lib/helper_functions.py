@@ -23,8 +23,6 @@ def non_stop_word_count(text):
     return Counter(non_stop_tokens)
 
 
-
-
 def most_common_vocabulary(texts,num_words=None):
     full_text = full_corpus_text(texts)
     count_dict = non_stop_word_count(full_text)
@@ -139,3 +137,12 @@ def dice_coefficient(a,b):
  
     score = float(matches)/float(lena + lenb)
     return score
+    
+def find_pos_tags(text):
+    tokenizer = RegexpTokenizer(r'\w+')
+    words = tokenizer.tokenize(text)
+    tagged_words = nltk.pos_tag(words)
+    tags = [x[-1] for x in tagged_words]
+    
+    #We want some sorted counter of the tags...
+    return Counter(tags)
