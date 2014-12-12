@@ -26,6 +26,7 @@ class NGramFreq(FeatureExtractor):
         return n_gram_freq_matrix
 
     def _normalize_freq(self, n_gram_freqs,text):
-            print np.shape(n_gram_freqs)
-
-            return np.divide(n_gram_freqs.astype(float), num_n_grams_in_document(text))
+        with np.errstate(divide='ignore'):
+            res = np.divide(n_gram_freqs, float(num_n_grams_in_document(text)))
+        res[np.isnan(res)] = 0
+        return res

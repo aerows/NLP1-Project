@@ -1,7 +1,6 @@
 import numpy as np
 import MySQLdb as mdb
 from classification_models.randomForestCM import RandomForestCM
-from classification_models.averaged_perceptronCM import *
 from datasets.mysql_dataset import MysqlDataset
 from data.dataset_data import MysqlDatasetData
 from feature_extractors.factor_stop_words import FactorStopWordsFE
@@ -15,9 +14,18 @@ import itertools as it
 
 
 def run_ngram(dataset,n,k,n_test,n_estimators, num_words):
+    """
+    :param dataset:
+    :param n:               Used for classifier
+    :param k:               Not used
+    :param n_test:          Used for data folding
+    :param n_estimators:    Used for classifier
+    :param num_words:       Used for feature extractor
+    :return:
+    """
     result = ""
     ngram_args = dict(n_clusters=k,n_jobs=1,max_iter=200,n_init=5,verbose=True)
-    pkl_filename = "pickles/ngramsdemo_%s_n-%d_%s.pickle" % (dataset,n,str(ngram_args))
+    pkl_filename = "pickles/ngramsdemo_%s_n-%d_%d_%s.pickle" % (dataset,n,num_words,str(ngram_args))
     try:
         pkl_file = open(pkl_filename, 'rb')
         dataset = pickle.load(pkl_file)
@@ -27,8 +35,11 @@ def run_ngram(dataset,n,k,n_test,n_estimators, num_words):
         features = [
             # KMeansNGram(k=k, n=n, kmeans_args=kmeans_args)
             # WordsPerSentanceFE(), # Not implemented properly yet!
-            NGramFreq(n=n,num_words=num_words)
+            NGramFreq(n=n, num_words=num_words),
+            # WordFreqFE(num_words=num_words),
+            # FactorStopWordsFE()
         ]
+
         dataset = MysqlDatasetData(MysqlDataset(dataset), features)
         dataset.dataset = None
         pkl_file = open(pkl_filename, 'wb')
@@ -91,7 +102,8 @@ def run_kmeans_ngram(dataset,n,k,n_test,n_estimators):
 # experiment = run_kmeans_ngram # Function to call
 experiment = run_ngram
 parameter_sets = [
-    dict(dataset=["small_article"],n=[3,4,5], k=[100,400,900],n_test=[1],n_estimators=[10000],num_words=[100,1000,10000])
+    #dict(dataset=["long_comments"],n=[3,5,7,9], k=[100],n_test=[1],n_estimators=[10000],num_words=[100,400,1000,2500])
+    dict(dataset=["small_article"],n=[3,4,5,6,10,14], k=[100],n_test=[1],n_estimators=[10000],num_words=[100,400,1000,2500])
 ]
 
 # Call the experiment for all the combinations of parameters and log the results

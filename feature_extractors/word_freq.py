@@ -25,6 +25,6 @@ class WordFreqFE(FeatureExtractor):
 
     def _normalize_freq(self, word_freqs,text):
         try:
-            return np.divide(word_freqs,num_words_in_document(text))
+            return np.divide(word_freqs, float(num_words_in_document(text)))
         except:
             print "whut"

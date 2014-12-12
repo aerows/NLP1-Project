@@ -27,7 +27,7 @@ class KMeansNGram(FeatureExtractor):
             self.kmeans = self.compute_kmeans(combined_patch_matrix)
 
     def normalize_hist(self, hist):
-        return np.divide(hist,np.sum(hist))
+        return np.divide(hist, np.sum(hist).astype(float))
 
     def quantize_feature(self, texts, labels):
         self.initialise_kmeans(texts,labels)
