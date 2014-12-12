@@ -16,7 +16,7 @@ import itertools as it
 
 def run_kmeans_ngram(dataset,n,k,n_test,n_estimators):
     result = ""
-    kmeans_args = dict(n_clusters=k,n_jobs=1,max_iter=200,n_init=5,verbose=True)
+    kmeans_args = dict(n_clusters=k,n_jobs=1,max_iter=100,n_init=5,verbose=True)
     pkl_filename = "pickles/kmeansngramdemo_%s_n-%d_%s.pickle" % (dataset,n,str(kmeans_args))
     try:
         pkl_file = open(pkl_filename, 'rb')
@@ -53,7 +53,7 @@ def run_kmeans_ngram(dataset,n,k,n_test,n_estimators):
 
 experiment = run_kmeans_ngram # Function to call
 parameter_sets = [
-    dict(dataset=["small_article"],n=[3,4,5], k=[100,400,900],n_test=[1],n_estimators=[10000])
+    dict(dataset=["long_comments"],n=[3,5,7,10], k=[500,1000],n_test=[3],n_estimators=[10000])
 ]
 
 # Call the experiment for all the combinations of parameters and log the results
