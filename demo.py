@@ -8,19 +8,21 @@ from feature_extractors.factor_stop_words import FactorStopWordsFE
 from feature_extractors.ngram_freq import NGramFreq
 # from feature_extractors.words_per_sentence import WordsPerSentanceFE
 from feature_extractors.word_freq import WordFreqFE
+from feature_extractors.pos_tag_hist import PosTagHistFE
 
 # Import data
 features = [
-    FactorStopWordsFE(),
-    WordFreqFE(400),
+    # FactorStopWordsFE(),
+    PosTagHistFE(),
     # WordsPerSentanceFE(), # Not implemented properly yet!
-    NGramFreq(2, 400)
+    NGramFreq(2, 400),
+    WordFreqFE(400)
 ]
 dataset = MysqlDatasetData(MysqlDataset("small_article"), features)
 
-data_train, labels_train, data_test, labels_test = dataset.fold(training_ratio=0.8, testing_ratio=0.2)
+data_train, labels_train, data_test, labels_test = dataset.fold(n_test=1)
 # Train model
-model = RandomForestCM()
+model = RandomForestCM(n_estimators=20000)
 model.train_classifier(data_train, labels_train)
 
 # Test model

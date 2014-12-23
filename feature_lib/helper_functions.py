@@ -4,6 +4,7 @@ from nltk.tokenize import RegexpTokenizer
 import numpy as np
 import itertools
 import re
+import pickle
 
 
 CHAR = re.compile(r'\w')
@@ -145,13 +146,17 @@ def vocabulary(texts):
         voc.union(nltk.set(text))
     return voc
 
-    
-def find_pos_tags(text):
+
+def pos_tag_hist(text):
     tokenizer = RegexpTokenizer(r'\w+')
     words = tokenizer.tokenize(text)
     tagged_words = nltk.pos_tag(words)
     tags = [x[-1] for x in tagged_words]
-    
-    #We want some sorted counter of the tags...
-    return Counter(tags)
+    counted = Counter(tags)
+    tagset = get_tagset()
+    hist = {pos_tag: counted[pos_tag] for pos_tag in tagset}
+    return hist
 
+def get_tagset():
+    tagset = pickle.load(open("tagset.pickle", 'r'))
+    return tagset

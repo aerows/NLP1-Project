@@ -53,7 +53,8 @@ def run_kmeans_ngram(dataset,n,k,n_test,n_estimators):
 
 experiment = run_kmeans_ngram # Function to call
 parameter_sets = [
-    dict(dataset=["long_comments"],n=[3,5,7,10], k=[500,1000],n_test=[3],n_estimators=[10000])
+    # dict(dataset=["long_comments"],n=[3,5,7,10], k=[500,1000],n_test=[3],n_estimators=[10000])
+
 ]
 
 # Call the experiment for all the combinations of parameters and log the results
